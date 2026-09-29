@@ -15,10 +15,24 @@ public class Main {
         System.out.print("Escolha uma das opções acima: ");
     }
 
+    public static void statusImpressao(byte impressao, ContaImpressao ref) {
+        if (impressao == -1) {
+            System.out.println("Sua conta não possui saldo o suficiente");
+        }
+        else if (impressao == -2) {
+            System.out.println("Os dados para impressão estão incorretos");
+        }
+        else {
+            System.out.println("Impressão finalizada com sucesso");
+            System.out.println("O seu saldo atual é R$ " + String.format("%.2f", ref.getSaldo()));
+        }
+    }
+
     public static void main(String[] args) {
         char opcaoMenu, escolhaConta = ' ';
         int paginas, copias;
         float valor;
+        String mensagem;
         boolean validado;
 
         ContaImpressao estudante01 = new ContaImpressao("Ana Silva", "CD001");
@@ -30,7 +44,7 @@ public class Main {
             System.out.println("Contas de estudantes cadastrados");
             System.out.println("1 - " + estudante01.getNome());
             System.out.println("2 - " + estudante02.getNome());
-            System.out.println("0 - Encerra programa");
+            System.out.println("0 - Encerrar o programa");
             System.out.print("Selecione qual conta deseja administrar ou encerre a aplicação: ");
             escolhaConta = scan.next().charAt(0);
 
@@ -64,11 +78,10 @@ public class Main {
                         valor = scan.nextFloat();
                         validado = refEstudante.addSaldo(valor);
 
-                        if (validado) {
-                            System.out.println("R$ " + String.format("%.2f", valor) + " adicionado com sucesso!");
-                        } else {
-                            System.out.println("Não é possível depositar esssa quantia. Deposite um valor maior");
-                        }
+                        mensagem = validado ? "R$ " + String.format("%.2f", valor) + " adicionado!\nSeu saldo é R$ "
+                                            + String.format("%.2f", refEstudante.getSaldo())
+                                            : "Deposite um valor maior";
+                        System.out.println(mensagem);
                         break;
                     case '2':
                         byte imprimido;
@@ -77,24 +90,20 @@ public class Main {
                         System.out.print("Deseja adicionar cópias (s/n): ");
                         char adicionarCopia = scan.next().charAt(0);
 
-                        if (Character.toLowerCase(adicionarCopia) == 's') {
-                            System.out.print("Informe a quantidade de cópias que deseja: ");
-                            copias = scan.nextInt();
-                            imprimido = refEstudante.impressao(paginas, copias);
-                            if (imprimido == -2) {
-                                System.out.println("Não foi possível concluir a impressão. Consulte os dados ou o saldo disponível");
-                            }
-                            else {
-                                System.out.printf("A impressão de %d páginas com %d cópias foi concluída!\n", paginas, copias);
-                            }
-                        } else {
-                            imprimido = refEstudante.impressao(paginas);
-                            if (imprimido == -2) {
-                                System.out.println("Não foi possível concluir a impressão. Consulte os dados ou o saldo disponível");
-                            }
-                            else {
-                                System.out.printf("A impressão de %d páginas foi concluída!\n", paginas);
-                            }
+                        switch (Character.toLowerCase(adicionarCopia)) {
+                            case 's':
+                                System.out.print("Informe a quantidade de cópias que deseja: ");
+                                copias = scan.nextInt();
+                                imprimido = refEstudante.impressao(paginas, copias);
+                                statusImpressao(imprimido, refEstudante);
+                                break;
+                            case 'n':
+                                imprimido = refEstudante.impressao(paginas);
+                                statusImpressao(imprimido, refEstudante);
+                                break;
+                            default:
+                                System.out.println("Essa á uma opção inexistente!");
+                                break;
                         }
                         break;
                     case '3':
@@ -105,20 +114,16 @@ public class Main {
                     case '4':
                         System.out.print("\nInsira o preço atual da impressão por página: ");
                         valor = scan.nextFloat();
+                        validado = ContaImpressao.setPrecoPagina(valor);
 
-                        if ((valor <= 0 || valor > 10) && (valor != ContaImpressao.precoPagina)) {
-                            System.out.println("Esse preço não é aceito. Entre com um dado correto");
-                        }
-                        else {
-                            ContaImpressao.precoPagina = valor;
-                            System.out.println("O preço foi atualizado!");
-                        }
+                        mensagem = validado ? "O valor da impressão foi atualizado com sucesso!" : "O novo valor precisar ser positivo e diferente do preço atual";
+                        System.out.println(mensagem);
                         break;
                     case '5':
-                        System.out.printf("\nPreço por página: R$ %.2f", ContaImpressao.precoPagina);
+                        System.out.printf("\nPreço por página: R$ %.2f", ContaImpressao.getPrecoPagina());
                         break;
                     case '6':
-                        System.out.println("\nContabilizando as contas, foram impressas o total de " + ContaImpressao.totalPagImpressa + " páginas");
+                        System.out.println("\nContabilizando as contas, foram impressas o total de " + ContaImpressao.getTotalPagImpressa() + " páginas");
                         break;
                     case '0':
                         break; //interrompe o switch e retorna ao 1º menu
