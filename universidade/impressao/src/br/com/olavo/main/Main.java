@@ -102,7 +102,7 @@ public class Main {
                                 statusImpressao(imprimido, refEstudante);
                                 break;
                             default:
-                                System.out.println("Essa á uma opção inexistente!");
+                                System.out.println("Essa é uma opção inexistente!");
                                 break;
                         }
                         break;
