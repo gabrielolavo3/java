@@ -1,3 +1,4 @@
+// Estudantes: Nina Moreira Baggio Vieira e Gabriel Santos Olavo
 package br.com.bilheteria.entidades;
 
 public class Filme {

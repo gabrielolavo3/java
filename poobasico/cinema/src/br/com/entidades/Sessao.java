@@ -1,3 +1,4 @@
+// Estudantes: Nina Moreira Baggio Vieira e Gabriel Santos Olavo
 package br.com.bilheteria.entidades;
 import java.time.LocalTime;
 
@@ -91,7 +92,7 @@ public class Sessao {
             return -2f;
         }
 
-        if (assentosDisponiveis() < 0) {
+        if (assentosDisponiveis() <= 0) {
             return -3f;
         }
 
